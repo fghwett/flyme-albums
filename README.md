@@ -28,3 +28,9 @@ function getCookie(name){var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");if
 
 > 魅族的相册数据是放在阿里云上的，所以速度会很快。我一年多张图片用了5分钟不到就同步完成了。
 
+## 参考资料
+
+* [知乎-魅族云相册的照片怎么一次性全部下载？](https://www.zhihu.com/question/66221241/answer/2078686584)
+* [油猴插件 - 获取魅族云空间的token](https://openuserjs.org/scripts/moreantfoxmail.com/copy-flyme-photo-token)
+* [github - vue批量下载魅族云相册](https://github.com/moreant/mpcb)
+* [github - php备份魅族云相册](https://github.com/dingdayu/mzstorage)
