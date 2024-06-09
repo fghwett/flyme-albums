@@ -136,7 +136,8 @@ func (d *Downloader) downAlbum(album *Album) error {
 
 	for _, f := range album.Files {
 		if err := d.downPhoto(album.DirName, f); err != nil {
-			return fmt.Errorf("down %s err: %v", f.Url, err)
+			e := fmt.Errorf("down %s err: %v", f.Url, err)
+			log.Printf("downAlbum：%s \n", e)
 		}
 		log.Printf("下载%s成功", folderPath)
 	}
