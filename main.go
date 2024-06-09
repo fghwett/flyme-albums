@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 var tokenPath = flag.String("token", "./token.txt", "token path")
@@ -27,7 +27,7 @@ func main() {
 }
 
 func readToken(path string) (string, error) {
-	body, err := ioutil.ReadFile(path)
+	body, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}
