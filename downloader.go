@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -46,11 +46,11 @@ func (d *Downloader) Run() error {
 			return fmt.Errorf("缓存数据失败 err: %v", err)
 		}
 	} else if err != nil {
-		return fmt.Errorf("检查缓存数据是否存在失败 err: %s\n", err)
+		return fmt.Errorf("检查缓存数据是否存在失败 err: %s", err)
 	} else {
-		body, err := ioutil.ReadFile(d.dataPath)
+		body, err := os.ReadFile(d.dataPath)
 		if err != nil {
-			return fmt.Errorf("read data file error, err: %s\n", err)
+			return fmt.Errorf("read data file error, err: %s", err)
 		}
 		a := &[]*Album{}
 		if err := json.Unmarshal(body, a); err != nil {
@@ -91,7 +91,7 @@ func (d *Downloader) InitOss() error {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
@@ -136,7 +136,8 @@ func (d *Downloader) downAlbum(album *Album) error {
 
 	for _, f := range album.Files {
 		if err := d.downPhoto(album.DirName, f); err != nil {
-			return fmt.Errorf("down %s err: %v", f.Url, err)
+			e := fmt.Errorf("down %s err: %v", f.Url, err)
+			log.Printf("downAlbum：%s \n", e)
 		}
 		log.Printf("下载%s成功", folderPath)
 	}
@@ -178,7 +179,7 @@ func (d *Downloader) GetAlbums() error {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return fmt.Errorf("album/dir/list read body error: %s", err)
 	}
@@ -219,7 +220,7 @@ func (d *Downloader) Save() error {
 		return fmt.Errorf("保存相册信息失败 err: %v", err)
 	}
 
-	if err = ioutil.WriteFile(d.dataPath, body, 0666); err != nil {
+	if err = os.WriteFile(d.dataPath, body, 0666); err != nil {
 		return fmt.Errorf("写入文件失败 err: %v", err)
 	}
 
