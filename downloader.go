@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type Downloader struct {
@@ -151,6 +152,12 @@ func (d *Downloader) downPhoto(folderName string, f *File) error {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		if err := d.bucket.GetObjectToFile(f.Url, filePath); err != nil {
 			return fmt.Errorf("下载照片失败 url: %s, filePath: %s, err: %s", f.Url, filePath, err)
+		}
+
+		shootTime := time.Unix(f.ShootTime/1000, 0)
+
+		if err := os.Chtimes(filePath, shootTime, shootTime); err != nil {
+			log.Printf("设置文件时间失败 filePath: %s, err: %s", filePath, err)
 		}
 	} else if err != nil {
 		return fmt.Errorf("检查文件是否存在失败 filePath: %s, err: %s", filePath, err)
